@@ -11,3 +11,7 @@ a la concentración de población y de riqueza además de la disponibilidad de l
 sus elevados costos.
 
 ## Algunos inconvenientes a los que nos enfrentamos fueron:
+
+## Análisis de la información.
+
+## Conclusiones y proyecciones a futuro
