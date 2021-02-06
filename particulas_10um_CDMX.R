@@ -22,6 +22,8 @@ paste(particulas_10$HORA, "00", sep=":")
 particulas_10$HORA <- paste(particulas_10$HORA, "00", sep=":")
 particulas_10$Date <- as.POSIXct(paste(particulas_10$FECHA, particulas_10$HORA), format="%Y-%m-%d %H:%M")
 tail(particulas_10)
+
+
 #Una vez que tenemos el DF con formato, realizamos un TS
 #Primero hacemos un subset con las columnas que queremos trabajar
 
