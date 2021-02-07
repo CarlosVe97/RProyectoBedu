@@ -39,6 +39,9 @@ em_16 <- merge(x=em_16, y=categoria, by="id_categoria")
 em_16 <- em_16[, c(1,20,2,19,3:18)]
 head(em_16)
 
+#Orden por categoría, y entidad
+em_16 <- arrange(em_16,id_categoria,id_entidad) 
+
 #........... Análisis gráfico ...............
 
 #Nombres de las emisiones en un arreglo
@@ -46,9 +49,9 @@ aux <- names(em_16)
 nom_emisiones <- aux[5:19]
 
 #Nombre de entidades
-nom_entidades <- c("ZMVM","CDMX","EDOMEX","TIZA")
+nom_entidades <- c("CDMX","EDOMEX","TIZA","ZMVM")
 
-
+#-----------------------------------------------------------
 
 # Histograma por entidad            --- Autos particulares --- 
 
@@ -85,7 +88,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Camionetas (SUV) --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de camionetas SUV
 filtrado <- filter(em_16, id_categoria == 81)
 camioneta <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -118,7 +121,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Taxis --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de Taxis
 filtrado <- filter(em_16, id_categoria == 82)
 taxis <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -151,7 +154,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Vagonetas y Combis --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de vagonetas y combis
 filtrado <- filter(em_16, id_categoria == 83)
 combis <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -184,7 +187,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Microbuses --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de microbuses
 filtrado <- filter(em_16, id_categoria == 84)
 microbuses <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -217,7 +220,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Pick up y veh. de carga hasta 3.8 t --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de pick up
 filtrado <- filter(em_16, id_categoria == 85)
 pickup <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -250,7 +253,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Tractocamiones --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de tractocamiones
 filtrado <- filter(em_16, id_categoria == 86)
 tractocamiones <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -283,7 +286,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Autobuses --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de autobuses
 filtrado <- filter(em_16, id_categoria == 87)
 autobuses <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -316,7 +319,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Vehículos de carga mayores a 3.8 t. --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de vehículos de carga
 filtrado <- filter(em_16, id_categoria == 88)
 carga <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -349,7 +352,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Motocicletas --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de motocicletas
 filtrado <- filter(em_16, id_categoria == 89)
 motos <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -382,7 +385,7 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
 
 # Histograma por entidad            --- Metrobuses/Mexibús --- 
 
-#Filtrado para la categoría de autos particulares
+#Filtrado para la categoría de metrobuses
 filtrado <- filter(em_16, id_categoria == 90)
 metrobus <- select(filtrado,Valor_PM10:Valor_HFC)
 
@@ -412,3 +415,20 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
   ylab("Toneladas al año")+
   geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
 #-----------------------------------------------------------
+
+# Comparación de emisión CO2 entre vehículos
+
+#Filtrado de los datos que se desean graficar
+filtrado <- filter(em_16, id_categoria > 79 & id_categoria < 91)
+co2 <- select(filtrado,nom_categoria,cve_entidad,Valor_CO2)
+co2 <- as.data.frame(co2)
+
+#Gráfica
+ggplot(co2, aes(x=nom_categoria, y=Valor_CO2, fill=cve_entidad)) +
+  ggtitle('Emisión de CO2 entre vehículos por zona') +
+  xlab("Vehículo") +
+  ylab("Toneladas al año")+
+  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
+
+
+#QUITAR EL ACUMULADO DE TODOS
