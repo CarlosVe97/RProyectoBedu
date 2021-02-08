@@ -7,7 +7,7 @@
 # http://www.aire.cdmx.gob.mx/default.php?opc=%27aKBhnmc=&r=b3BlbmRhdGEvaW52ZW50YXJpb19lbWlzaW9uZXMvSW52ZW50YXJpb19FbWlzaW9uZXMvSUVfMjAxNi5jc3Y=
 
 #Estos se encuentran descargados previamente en nuestro directorio de trabajo
-#setwd("C:/Users/Linette/Documents/BEDU/Programacion-con-R-Santander-master/Proyecto/Emisiones16")
+setwd("C:/Users/Linette/Documents/BEDU/Programacion-con-R-Santander-master/Proyecto/Emisiones16")
 
 
 #Cargamos las librerias necesarias 
@@ -42,6 +42,7 @@ head(em_16)
 #Orden por categoría, y entidad
 em_16 <- arrange(em_16,id_categoria,id_entidad) 
 
+#write.csv(em_16,"em_16.csv")
 #........... Análisis gráfico ...............
 
 #Nombres de las emisiones en un arreglo
@@ -49,21 +50,43 @@ aux <- names(em_16)
 nom_emisiones <- aux[5:19]
 
 #Nombre de entidades
-nom_entidades <- c("CDMX","EDOMEX","TIZA","ZMVM")
+nom_entidades <- c("CDMX","EDOMEX","TIZA")
 
 #-----------------------------------------------------------
 
-# Histograma por entidad            --- Autos particulares --- 
+#Gráfica de barras  ------ Emisión de CO2 de todas las categorías  ------
+
+filtrado <- filter(em_16, id_entidad == 4)
+todo_CO2 <- select(filtrado,nom_categoria, Valor_CO2)
+todo_CO2 <- as.data.frame(todo_CO2)
+
+m_todo_co2 <- mean(todo_CO2$Valor_CO2)
+maximo <- max(todo_CO2$Valor_CO2)
+nom_maximo <- select((filter(todo_CO2, Valor_CO2 == maximo)), nom_categoria)
+
+#Gráfica
+ggplot(todo_CO2, aes(x=nom_categoria, y=Valor_CO2)) +
+  ggtitle('Emisión de CO2 generado en el 2016 (ZMVM)', paste("Media=",m_todo_co2, "   " , " Máximo  ~  ", nom_maximo[1] ,"=", maximo)) +
+  xlab("Categoría") +
+  ylab("Toneladas al año")+
+  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8), fill = "blue")+
+  geom_hline(yintercept =  m_todo_co2, col = "purple", lwd = 1, lty =2) 
+  #theme(axis.text.x = element_text(angle = 90))
+
+
+#-----------------------------------------------------------
+
+# Gráfico de barras           --- Autos particulares --- 
 
 #Filtrado para la categoría de autos particulares
-filtrado <- filter(em_16, id_categoria == 80)
+filtrado <- filter(em_16, id_categoria == 80, id_entidad != 4)
 particulares <- select(filtrado,Valor_PM10:Valor_HFC)
 
 #Elementos de emisiones en un arreglo
 elementos <- list()
 
-for (i in 1:4) {
-  for (j in 1:16) {
+for (i in 1:3) {
+  for (j in 1:15) {
     
     elementos[[length(elementos)+1]] <- particulares[i,j]
     
@@ -75,7 +98,7 @@ head(lista)
 
 #Creación del data frame para el histograma agrupado 
 survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
+                     emisiones=rep(nom_emisiones,3),
                      registros=lista)
 
 #Gráfica
@@ -83,86 +106,22 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
   ggtitle('Emisiones de autos particulares en el 2016') +
   xlab("Emisiones") +
   ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
+  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 #-----------------------------------------------------------
 
-# Histograma por entidad            --- Camionetas (SUV) --- 
 
-#Filtrado para la categoría de camionetas SUV
-filtrado <- filter(em_16, id_categoria == 81)
-camioneta <- select(filtrado,Valor_PM10:Valor_HFC)
-
-#Elementos de emisiones en un arreglo
-elementos <- list()
-
-for (i in 1:4) {
-  for (j in 1:16) {
-    
-    elementos[[length(elementos)+1]] <- camioneta[i,j]
-    
-  }
-}
-
-lista <- do.call(rbind, elementos)
-head(lista)
-
-#Creación del data frame para el histograma agrupado 
-survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
-                     registros=lista)
-
-#Gráfica
-ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
-  ggtitle('Emisiones de Camionetas (SUV) en el 2016') +
-  xlab("Emisiones") +
-  ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
-#-----------------------------------------------------------
-
-# Histograma por entidad            --- Taxis --- 
-
-#Filtrado para la categoría de Taxis
-filtrado <- filter(em_16, id_categoria == 82)
-taxis <- select(filtrado,Valor_PM10:Valor_HFC)
-
-#Elementos de emisiones en un arreglo
-elementos <- list()
-
-for (i in 1:4) {
-  for (j in 1:16) {
-    
-    elementos[[length(elementos)+1]] <- taxis[i,j]
-    
-  }
-}
-
-lista <- do.call(rbind, elementos)
-head(lista)
-
-#Creación del data frame para el histograma agrupado 
-survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
-                     registros=lista)
-
-#Gráfica
-ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
-  ggtitle('Emisiones de Taxis en el 2016') +
-  xlab("Emisiones") +
-  ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
-#-----------------------------------------------------------
-
-# Histograma por entidad            --- Vagonetas y Combis --- 
+# Gráfico de barras            --- Vagonetas y Combis --- 
 
 #Filtrado para la categoría de vagonetas y combis
-filtrado <- filter(em_16, id_categoria == 83)
+filtrado <- filter(em_16, id_categoria == 83, id_entidad != 4)
 combis <- select(filtrado,Valor_PM10:Valor_HFC)
 
 #Elementos de emisiones en un arreglo
 elementos <- list()
 
-for (i in 1:4) {
-  for (j in 1:16) {
+for (i in 1:3) {
+  for (j in 1:15) {
     
     elementos[[length(elementos)+1]] <- combis[i,j]
     
@@ -174,7 +133,7 @@ head(lista)
 
 #Creación del data frame para el histograma agrupado 
 survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
+                     emisiones=rep(nom_emisiones,3),
                      registros=lista)
 
 #Gráfica
@@ -182,119 +141,21 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
   ggtitle('Emisiones de Vagonetas y Combis en el 2016') +
   xlab("Emisiones") +
   ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
+  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 #-----------------------------------------------------------
 
-# Histograma por entidad            --- Microbuses --- 
-
-#Filtrado para la categoría de microbuses
-filtrado <- filter(em_16, id_categoria == 84)
-microbuses <- select(filtrado,Valor_PM10:Valor_HFC)
-
-#Elementos de emisiones en un arreglo
-elementos <- list()
-
-for (i in 1:4) {
-  for (j in 1:16) {
-    
-    elementos[[length(elementos)+1]] <- microbuses[i,j]
-    
-  }
-}
-
-lista <- do.call(rbind, elementos)
-head(lista)
-
-#Creación del data frame para el histograma agrupado 
-survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
-                     registros=lista)
-
-#Gráfica
-ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
-  ggtitle('Emisiones de Microbuses en el 2016') +
-  xlab("Emisiones") +
-  ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
-#-----------------------------------------------------------
-
-# Histograma por entidad            --- Pick up y veh. de carga hasta 3.8 t --- 
-
-#Filtrado para la categoría de pick up
-filtrado <- filter(em_16, id_categoria == 85)
-pickup <- select(filtrado,Valor_PM10:Valor_HFC)
-
-#Elementos de emisiones en un arreglo
-elementos <- list()
-
-for (i in 1:4) {
-  for (j in 1:16) {
-    
-    elementos[[length(elementos)+1]] <- pickup[i,j]
-    
-  }
-}
-
-lista <- do.call(rbind, elementos)
-head(lista)
-
-#Creación del data frame para el histograma agrupado 
-survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
-                     registros=lista)
-
-#Gráfica
-ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
-  ggtitle('Emisiones de Pick up y veh. de carga hasta 3.8 t en el 2016') +
-  xlab("Emisiones") +
-  ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
-#-----------------------------------------------------------
-
-# Histograma por entidad            --- Tractocamiones --- 
-
-#Filtrado para la categoría de tractocamiones
-filtrado <- filter(em_16, id_categoria == 86)
-tractocamiones <- select(filtrado,Valor_PM10:Valor_HFC)
-
-#Elementos de emisiones en un arreglo
-elementos <- list()
-
-for (i in 1:4) {
-  for (j in 1:16) {
-    
-    elementos[[length(elementos)+1]] <- tractocamiones[i,j]
-    
-  }
-}
-
-lista <- do.call(rbind, elementos)
-head(lista)
-
-#Creación del data frame para el histograma agrupado 
-survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
-                     registros=lista)
-
-#Gráfica
-ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
-  ggtitle('Emisiones de Tractocamiones en el 2016') +
-  xlab("Emisiones") +
-  ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
-#-----------------------------------------------------------
-
-# Histograma por entidad            --- Autobuses --- 
+# Gráfico de barras              --- Autobuses --- 
 
 #Filtrado para la categoría de autobuses
-filtrado <- filter(em_16, id_categoria == 87)
+filtrado <- filter(em_16, id_categoria == 87, id_entidad != 4)
 autobuses <- select(filtrado,Valor_PM10:Valor_HFC)
 
 #Elementos de emisiones en un arreglo
 elementos <- list()
 
-for (i in 1:4) {
-  for (j in 1:16) {
+for (i in 1:3) {
+  for (j in 1:15) {
     
     elementos[[length(elementos)+1]] <- autobuses[i,j]
     
@@ -306,7 +167,7 @@ head(lista)
 
 #Creación del data frame para el histograma agrupado 
 survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
+                     emisiones=rep(nom_emisiones,3),
                      registros=lista)
 
 #Gráfica
@@ -314,46 +175,15 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
   ggtitle('Emisiones de Autobuses en el 2016') +
   xlab("Emisiones") +
   ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
+  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 #-----------------------------------------------------------
 
-# Histograma por entidad            --- Vehículos de carga mayores a 3.8 t. --- 
 
-#Filtrado para la categoría de vehículos de carga
-filtrado <- filter(em_16, id_categoria == 88)
-carga <- select(filtrado,Valor_PM10:Valor_HFC)
-
-#Elementos de emisiones en un arreglo
-elementos <- list()
-
-for (i in 1:4) {
-  for (j in 1:16) {
-    
-    elementos[[length(elementos)+1]] <- carga[i,j]
-    
-  }
-}
-
-lista <- do.call(rbind, elementos)
-head(lista)
-
-#Creación del data frame para el histograma agrupado 
-survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
-                     registros=lista)
-
-#Gráfica
-ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
-  ggtitle('Emisiones de Vehículos de carga mayores a 3.8 t. en el 2016') +
-  xlab("Emisiones") +
-  ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
-#-----------------------------------------------------------
-
-# Histograma por entidad            --- Motocicletas --- 
+# Gráfico de barras             --- Motocicletas --- 
 
 #Filtrado para la categoría de motocicletas
-filtrado <- filter(em_16, id_categoria == 89)
+filtrado <- filter(em_16, id_categoria == 89, id_entidad != 4)
 motos <- select(filtrado,Valor_PM10:Valor_HFC)
 
 #Elementos de emisiones en un arreglo
@@ -380,55 +210,64 @@ ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
   ggtitle('Emisiones de Motocicletas en el 2016') +
   xlab("Emisiones") +
   ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
+  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 #-----------------------------------------------------------
 
-# Histograma por entidad            --- Metrobuses/Mexibús --- 
 
-#Filtrado para la categoría de metrobuses
-filtrado <- filter(em_16, id_categoria == 90)
-metrobus <- select(filtrado,Valor_PM10:Valor_HFC)
-
-#Elementos de emisiones en un arreglo
-elementos <- list()
-
-for (i in 1:4) {
-  for (j in 1:16) {
-    
-    elementos[[length(elementos)+1]] <- metrobus[i,j]
-    
-  }
-}
-
-lista <- do.call(rbind, elementos)
-head(lista)
-
-#Creación del data frame para el histograma agrupado 
-survey <- data.frame(zonas=rep(nom_entidades,each= 15),
-                     emisiones=rep(nom_emisiones,4),
-                     registros=lista)
-
-#Gráfica
-ggplot(survey, aes(x=emisiones, y=registros, fill=zonas)) +
-  ggtitle('Emisiones de Metrobuses/Mexibús en el 2016') +
-  xlab("Emisiones") +
-  ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
-#-----------------------------------------------------------
-
-# Comparación de emisión CO2 entre vehículos
+# Grafica de barras  ------  Comparación de emisión CO2 entre vehículos dividido en las 3 zonas ----
 
 #Filtrado de los datos que se desean graficar
-filtrado <- filter(em_16, id_categoria > 79 & id_categoria < 91)
+filtrado <- filter(em_16, id_categoria > 79 & id_categoria < 91, id_entidad != 4)
 co2 <- select(filtrado,nom_categoria,cve_entidad,Valor_CO2)
 co2 <- as.data.frame(co2)
 
+#Promedio de CO2 por tipo de vehículo
+m_co2veh <- mean(co2$Valor_CO2)
+
 #Gráfica
 ggplot(co2, aes(x=nom_categoria, y=Valor_CO2, fill=cve_entidad)) +
-  ggtitle('Emisión de CO2 entre vehículos por zona') +
+  ggtitle('Emisión de CO2 generado por zonas', paste("Media =",m_co2veh)) +
   xlab("Vehículo") +
   ylab("Toneladas al año")+
-  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))
+  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8))+
+  geom_hline(yintercept =  m_co2veh, col = "purple", lwd = 1, lty =2) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+#-----------------------------------------------------------
+
+# Gráfico de barras   -------- Comparación de emisión CO2 entre vehículos en la ZMVM ----------------
+filtrado <- filter(em_16, id_categoria > 79 & id_categoria < 91, id_entidad == 4)
+zmvm_co2 <- select(filtrado,nom_categoria, Valor_CO2)
+zmvm_co2 <- as.data.frame(zmvm_co2)
+
+m_co2 <- mean(zmvm_co2$Valor_CO2)
+
+#Gráfica
+ggplot(zmvm_co2, aes(x=nom_categoria, y=Valor_CO2)) +
+  ggtitle('Emisión de CO2 generado en la ZMVM', paste("Media=",m_co2)) +
+  xlab("Vehículo") +
+  ylab("Toneladas al año")+
+  geom_bar(stat="identity", width=0.7, position=position_dodge(width=0.8), fill = rainbow(11))+
+  geom_hline(yintercept =  m_co2, col = "purple", lwd = 1, lty =2) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  
+
+# ----- INTENTO PIE CHART -----------------
+
+# Pie Chart with Percentages #Intento
+slices <- select(zmvm_co2,Valor_CO2)
+lbls <- select(zmvm_co2,nom_categoria)
+pct <- round((slices/sum(slices)*100), digits = 3)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="") # ad % to labels
+pie(slices,labels = lbls, col=rainbow(11),
+    main="Pie Chart of Countries")
 
 
-#QUITAR EL ACUMULADO DE TODOS
+porcentajes <- cbind(zmvm_co2,Porcentaje=pct) #DATA FRAME DE PORCENTAJES
+
+
+
+
+
