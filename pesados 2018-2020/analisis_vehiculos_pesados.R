@@ -1,11 +1,10 @@
-
-
 # Registro Administrativo de la Industria Automotriz de Vehículos Pesados 
 #Venta por fuente de energia 2018 Ene - 2020 Dic. 
 
 #Los datos mostrados a continuación fueron obtenidos de:
 # INEGI. Datos primarios, Registro administrativo de la industria automotriz de vehículos pesados
 # https://www.inegi.org.mx/datosprimarios/iavp/#Datos_abiertos
+
 library('plyr')
 library("dplyr")
 library('tidyr')
@@ -13,7 +12,7 @@ library('ggplot2')
 library('forecast')
 
 getwd()
-setwd('/home/carlos/Documents/BeduCursoR/proyecto_vehiculo/conjunto_de_datos')
+setwd('/RProyectoBedu-main/pesados 2018-2020/datos')
 
 #Leemos los datos
 pesados_2018 <- read.csv("raiavp_vta_energ_mensual_tr_cifra_2018.csv")
@@ -40,8 +39,6 @@ pesados <- rbind(pesados_2018, pesados_2019, pesados_2020)
 pesados
 
 #Es necesario cargar los archivos adicional correspondiente a ID_MES
-getwd()
-setwd("../catalogos")
 entidad <- read.csv("tc_mes.csv")
 
 #Le hacemos un merge con nuestro DF principal
@@ -71,100 +68,106 @@ datos_compactos_pesados
 
 #########################################################################
 #ANALISIS EXPLORATORIO DE DATOS(EDA)
-#Venta nacional de vehículos pesados( menudeo)
+#Venta nacional de vehículos pesados(menudeo)
 ?ddply
 ventas_pesados_menudeo <- ddply(datos_compactos_pesados, .(fecha) ,summarise,
                                 ventas_totales= sum(MENUDEO ))
 ts.ventas.menudeo <- ts(ventas_pesados_menudeo$ventas_totales,st=2018,fr=12)
-ts.plot(ts.ventas.menudeo)
+ts.plot(ts.ventas.menudeo, main = 'Venta nacional de vehiculos pesados (Menudeo)',
+        xlab = "Año", ylab = "Ventas")
 
-#Venta nacional de vehículos pesados(mayoreo )
+#Venta nacional de vehículos pesados(mayoreo)
 ventas_pesados_mayoreo <- ddply(datos_compactos_pesados, .(fecha) ,summarise,
                                 ventas_totales= sum(MAYOREO ))
 ts.ventas.mayoreo <- ts(ventas_pesados_mayoreo$ventas_totales,st=2018,fr=12)
-ts.plot(ts.ventas.mayoreo)
+ts.plot(ts.ventas.mayoreo, main = 'Venta nacional de vehiculos pesados (Mayoreo)',
+        xlab = "Año", ylab = "Ventas")
 
 #Venta nacional de vehículos pesados(mayoreo y menudeo)
 ventas_pesados <- ddply(datos_compactos_pesados, .(fecha) ,summarise, ventas_totales= sum(MENUDEO + MAYOREO))
-ts.ventas <- ts(ventas_pesados$ventas_totales,st=2016,fr=12)
-ts.plot(ts.ventas)
+ts.ventas <- ts(ventas_pesados$ventas_totales,st=2018,fr=12)
+ts.plot(ts.ventas, main = 'Venta nacional de vehiculos pesados (Mayoreo y menudeo)',
+        xlab = "Año", ylab = "Ventas")
 
 
 #Venta total nacional por marca (menudeo)
 venta_menudeo_marca <- ddply(datos_compactos_pesados, .(MARCA) ,summarise,
-                 venta_total_menudeo= sum(MENUDEO))
+                             venta_total_menudeo= sum(MENUDEO))
 venta_menudeo_marca
 
-grafico_menudeo_marca <- ggplot(venta_menudeo_marca, aes(x = MARCA, y = venta_total_menudeo)) + 
-  geom_bar (stat="identity") +
+grafico_menudeo_marca <- ggplot(venta_menudeo_marca,aes(x = reorder(MARCA, -venta_total_menudeo), y = venta_total_menudeo)) + 
+  geom_bar (stat="identity", fill='tomato3') +
   ggtitle('Venta total nacional de de vehículos pesados por marca 
   2018 Ene -2020 Dic
           (Menudeo)')+
   xlab("Marcas")+
   ylab("Ventas Totales")+
-  theme(axis.text.x = element_text(angle = 90, hjust = 0))
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.6))
 grafico_menudeo_marca
+
 
 #Venta nacional por marca (mayoreo)
 venta_mayoreo_marca <- ddply(datos_compactos_pesados, .(MARCA) ,summarise,
                              venta_total_mayoreo= sum(MAYOREO))
 venta_mayoreo_marca
 
-grafico_mayoreo_marca <- ggplot(venta_mayoreo_marca, aes(x = MARCA, y = venta_total_mayoreo)) + 
-  geom_bar (stat="identity") +
+grafico_mayoreo_marca <- ggplot(venta_mayoreo_marca, aes(x =reorder(MARCA, -venta_total_mayoreo), y = venta_total_mayoreo)) + 
+  geom_bar (stat="identity", fill='tomato3') +
   ggtitle('Venta total nacional de de vehículos pesados por marca 
   2018 Ene -2020 Dic
           (Mayoreo)')+
   xlab("Marcas")+
   ylab("Ventas Totales")+
-  theme(axis.text.x = element_text(angle = 90, hjust = 0))
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.6))
 grafico_mayoreo_marca
 
 
 #Venta nacional por marca (mayoreo + menudeo)
 venta_total_marca <- ddply(datos_compactos_pesados, .(MARCA) ,summarise,
-                             venta_total= sum(MAYOREO + MENUDEO))
+                           venta_total= sum(MAYOREO + MENUDEO))
 venta_total_marca
 
-grafico_venta_total_marca <- ggplot(venta_total_marca, aes(x = MARCA, y = venta_total)) + 
-  geom_bar (stat="identity") +
+##ignorar grafico
+grafico_venta_total_marca <- ggplot(venta_total_marca, aes(x = reorder(MARCA, -venta_total), y = venta_total)) + 
+  geom_bar (stat="identity",fill='tomato3') +
   ggtitle('Venta total nacional de de vehículos pesados por marca 
   2018 Ene -2020 Dic
-          (Mayoreo+Menudeo)')+
+  (Mayoreo+Menudeo)')+
   xlab("Marcas")+
   ylab("Ventas Totales")+
-  theme(axis.text.x = element_text(angle = 90, hjust = 0))
+  theme(axis.text.x = element_text(angle = 90, hjust = 0), plot.title = element_text(hjust = 0.5))
 grafico_venta_total_marca
+
 
 #Venta nacional por fuente de energia
 head(datos_compactos_pesados)
 venta_fuente_energia <- ddply(datos_compactos_pesados,.(FUENTE_DE_ENERGIA) ,summarise,
-                           venta_menudeo= sum(MENUDEO), venta_mayoreo=sum(MAYOREO))
+                              venta_menudeo= sum(MENUDEO), venta_mayoreo=sum(MAYOREO))
 venta_fuente_energia  
 
 grafico_venta_fuente_energia <- ggplot(venta_fuente_energia, aes(x = FUENTE_DE_ENERGIA, y = venta_menudeo)) + 
-  geom_bar (stat="identity") +
+  geom_bar (stat="identity", fill='magenta4') +
   ggtitle('Venta total nacional de de vehículos pesados por Fuente de energia 
   2018 Ene -2020 Dic')+
   xlab("Fuente de Energia")+
   ylab("Ventas")+
-  theme(axis.text.x = element_text(angle = 90, hjust = 0))
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.60), plot.title = element_text(hjust = 0.5))
 grafico_venta_fuente_energia
 
 #Grafico mas complejo de fuente de energia y Segmento
 grafico_energia_y_segmento <- ggplot(datos_compactos_pesados, aes(x = FUENTE_DE_ENERGIA, y = MENUDEO)) + 
-  geom_bar (stat="identity") +
+  geom_bar (stat="identity",fill='magenta4') +
   ggtitle('Venta total nacional de de vehículos pesados por Fuente de energia 
   2018 Ene -2020 Dic')+
   xlab("Fuente de Energia")+
   ylab("Ventas")+
   facet_wrap(.~ SEGMENTO)+
-  theme(axis.text.x = element_text(angle = 90, hjust = 0))
+  theme(axis.text.x = element_text(angle = 90, hjust = 0), plot.title = element_text(hjust = 0.5))
 grafico_energia_y_segmento
 
 
 #Otro grafico complejo comparango marcas, segmento y ventas
-grafico_marca_y_segmento <- ggplot(datos_compactos_pesados, aes(x = MARCA, y = MENUDEO, fill= FUENTE_DE_ENERGIA)) + 
+grafico_marca_y_segmento <- ggplot(datos_compactos_pesados, aes(x = reorder(MARCA, -MENUDEO), y = MENUDEO, fill= FUENTE_DE_ENERGIA)) + 
   geom_bar (stat="identity") +
   ggtitle('Venta total nacional de de vehículos pesados por marca
   (Separados por segmento)
@@ -172,7 +175,7 @@ grafico_marca_y_segmento <- ggplot(datos_compactos_pesados, aes(x = MARCA, y = M
   xlab("Marca")+
   ylab("Ventas")+
   facet_wrap(.~ SEGMENTO)+
-  theme(axis.text.x = element_text(angle = 90, hjust = 0))
+  theme(axis.text.x = element_text(angle = 90, hjust = 0), plot.title = element_text(hjust = 0.5))
 grafico_marca_y_segmento
 
 #Filtramos los electricos e hibridos
@@ -180,13 +183,13 @@ Electricos_e_hibridos  <- datos_compactos_pesados %>% filter((FUENTE_DE_ENERGIA=
 
 #Grafico con la principales marcas provedoras de vehiculos pesados electricos e hibridos
 grafico_electricos_hibridos <- ggplot(Electricos_e_hibridos, aes(x = MARCA, y = MENUDEO)) + 
-  geom_bar (stat="identity") +
+  geom_bar (stat="identity", fill="aquamarine4") +
   ggtitle('Principales provedores de vehiculos electricos e hibridos 
   2018 Ene -2020 Dic')+
   xlab("Marca")+
   ylab("Ventas")+
   facet_wrap(.~ FUENTE_DE_ENERGIA)+
-  theme(axis.text.x = element_text(angle = 90, hjust = 0))
+  theme(axis.text.x = element_text(angle = 90, hjust = 0), plot.title = element_text(hjust = 0.5))
 
 grafico_electricos_hibridos
 
@@ -194,17 +197,19 @@ grafico_electricos_hibridos
 ventas_hibridos  <- datos_compactos_pesados %>% filter(FUENTE_DE_ENERGIA=="Híbrido")
 head(ventas_hibridos)
 ts.ventas.hibridos <- ts(ventas_hibridos$MENUDEO,st=2018,fr=12)
-ts.plot(ts.ventas.hibridos)
+ts.plot(ts.ventas.hibridos, main = 'Venta nacional de vehiculos pesados hibridos 2018-2020',
+        xlab = "Año", ylab = "Ventas")
 
 
 #################################################################333
 #FORECASTING
-#Despues realizaremos una prediccion de los proximos 6 meses para la venta de
+#Despues realizaremos una pronostico de los proximos 6 meses para la venta de
 #vehiculos hibridos pesados
 autoarima_hibrido <- auto.arima(ts.ventas.hibridos)
 forecast_hibrido <- forecast(autoarima_hibrido, h = 6)
 forecast_hibrido
-plot(forecast_hibrido)
+plot(forecast_hibrido, main = 'Pronóstico de venta nacional de vehiculos hibridos pesados en los proximos 6 meses
+     (Menudeo)', xlab = "Año", ylab = "Ventas")
 #Al graficar los residuos vemos que hay mucha varianza apartir del segundo
 #semestre del 2019
 plot(forecast_hibrido$residuals)
@@ -227,8 +232,8 @@ autoarima_ventas_total <- auto.arima(ts.ventas.menudeo)
 autoarima_ventas_total
 forecast_ventas <- forecast(autoarima_ventas_total, h = 6)
 forecast_ventas
-plot(forecast_ventas)
-
+plot(forecast_ventas, main = 'Pronóstico de venta nacional de vehiculos pesados en los proximos 6 meses
+     (Menudeo)', xlab = "Año", ylab = "Ventas")
 #vemos que tambien hay mucha varianza
 plot(forecast_ventas$residuals)
 qqnorm(forecast_ventas$residuals)
@@ -236,4 +241,3 @@ acf(forecast_ventas$residuals)
 
 #Y ocurre el mismo problema con la exactitud
 accuracy(forecast_hibrido)
-
