@@ -1,0 +1,4 @@
+﻿"Note: The items and the historical figures of the indicator changed, due to the updating of the National Emissions Inventory."
+"Source: 
+SEMARNAT. INECC. Dirección de Modelos Sectoriales de Desarrollo Bajo en Carbono Inventario Nacional de Emisiones de Gases y Compuestos de Efecto Invernadero 1990-2015 INEGYCEI. INECC. México. Disponible en:  http://cambioclimatico.gob.mx:8080/xmlui/handle/publicaciones/226. Fecha de consulta: abril de 2019.
+OCDE. Stat. National Accounts.Gross domestic product (GDP). GDP, US $, constant prices, constant PPPs, reference year 2010, millions. Disponible en:  https://stats.oecd.org/index.aspx?queryid=60702#"

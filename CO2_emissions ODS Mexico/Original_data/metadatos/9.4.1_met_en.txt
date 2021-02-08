@@ -1,0 +1,58 @@
+﻿Title: 9.4.1 CO2 emissions, kg per purchasing power parity $ GDP
+
+Description: It is the total amount of carbon dioxide emitted annually (derived from the energy sectors, by industrial processes and product use, agriculture, forestry and other land uses, and waste), by GDP at constant prices base 2010 expressed in Parity of Power of Purchase (dollars).
+
+Modified: 2019-05-31
+
+Publisher: Instituto Nacional de Estadística y Geografía, INEGI
+
+Mbox: contacto.ods@agenda2030.mx
+
+License: http://www.agenda2030.mx/docs/doctos/system/terminos_uso_SIODS_en.pdf
+
+
+ContactPoint: Arturo Flores Martínez
+Director General de Estadística e Información Ambiental
+Avenida Ejército Nacional 223
+Colonia Anáhuac, 11320
+Miguel Hidalgo, Miguel Hidalgo, Ciudad de México
+55 5490 0900, ext. 10941
+arturo.flores@semarnat.gob.mx
+
+Temporal: 1990-2015
+
+Spatial: Estados Unidos Mexicanos
+
+AccrualPeriodicity: Annual
+
+Distribution:http://www.agenda2030.mx/docs/files/csv/zip/9.4.1_en.zip
+
+Goal: 9. Build resilient infrastructure, promote inclusive and sustainable industrialization and foster innovation
+
+Target: Target 9.4 By 2030, upgrade infrastructure and retrofit industries to make them sustainable, with increased resource-use efficiency and greater adoption of clean and environmentally sound technologies and industrial processes, with all countries taking action in accordance with their respective capabilities
+
+Type of indicator: Global
+
+Algorithm: 9_4_1_EN.gif
+
+Description of the indicator: The indicator results from dividing the carbon dioxide emissions derived from the energy sectors, by industrial processes and product use, agriculture, forestry and other land uses, and waste, between the GDP expressed in purchasing power parity to constant prices in a specific year. The result is expressed in kilograms of CO2 per dollar per parity of purchasing power.
+
+Unit of measure: Kilograms of CO2 per dollar
+
+Geographic coverage: National
+
+Opportunity: Biannual.
+
+SEMARNAT. INECC. Dirección de Modelos Sectoriales de Desarrollo Bajo en Carbono Inventario Nacional de Emisiones de Gases y Compuestos de Efecto Invernadero 1990-2015 INEGYCEI. INECC. México. Disponible en:  http://cambioclimatico.gob.mx:8080/xmlui/handle/publicaciones/226. Fecha de consulta: abril de 2019.
+OCDE. Stat. National Accounts.Gross domestic product (GDP). GDP, US $, constant prices, constant PPPs, reference year 2010, millions. Disponible en:  https://stats.oecd.org/index.aspx?queryid=60702#
+
+Date of next update of indicator: To be announced (TBA) */
+
+Unit of the State responsible for calculating the indicator: Secretaría de Medio Ambiente y Recursos Naturales (SEMARNAT).
+
+Importance and purpose of the indicator: Climate change is accelerated by the increase of greenhouse gases (GHG) in the atmosphere. CO2 is considered the most important GHG because of its high persistence in the atmosphere (between 5 and 200 years), its importance as a potential mechanism for climate change and the significant increment in its concentration in the atmosphere (40 percent as opposed to the preindustrial era). In this sense the indicator is a reflection of the intensity of emissions of CO2 with reference to the GDP PPP and is used as a measurement of the effeciency with respect to emissions with which the economy of a country grows.
+
+National and/or international reference: Intergovernmental Panel on Climate Change (IPCC).  http://www.ipcc.ch/
+
+Observations: The National Inventory of Emissions of Gases and Greenhouse Compounds (INEGyCEI) 1990-2015 was prepared with a methodological approach different from the inventories presented in the previous National Communications. This approach allowed more timely, accurate and disaggregated data information and used, to the extent possible, emission factors according to the national reality, which gives a more realistic information of national emissions. Therefore, the new estimates do not allow a valid direct comparison with the figures reported previously.
+
