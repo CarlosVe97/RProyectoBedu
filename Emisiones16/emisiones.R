@@ -7,7 +7,7 @@
 # http://www.aire.cdmx.gob.mx/default.php?opc=%27aKBhnmc=&r=b3BlbmRhdGEvaW52ZW50YXJpb19lbWlzaW9uZXMvSW52ZW50YXJpb19FbWlzaW9uZXMvSUVfMjAxNi5jc3Y=
 
 #Estos se encuentran descargados previamente en nuestro directorio de trabajo
-setwd("C:/Users/Linette/Documents/BEDU/Programacion-con-R-Santander-master/Proyecto/Emisiones16")
+setwd("C:/Users/Linette/Documents/BEDU/Programacion-con-R-Santander-master/Proyecto/Emisiones16/datos")
 
 
 #Cargamos las librerias necesarias 
@@ -57,7 +57,7 @@ nom_entidades <- c("CDMX","EDOMEX","TIZA")
 #Gráfica de barras  ------ Emisión de CO2 de todas las categorías  ------
 
 filtrado <- filter(em_16, id_entidad == 4)
-todo_CO2 <- select(filtrado,nom_categoria, Valor_CO2)
+todo_CO2 <- select(filtrado,id_categoria, nom_categoria, Valor_CO2)
 todo_CO2 <- as.data.frame(todo_CO2)
 
 m_todo_co2 <- mean(todo_CO2$Valor_CO2)
@@ -65,7 +65,7 @@ maximo <- max(todo_CO2$Valor_CO2)
 nom_maximo <- select((filter(todo_CO2, Valor_CO2 == maximo)), nom_categoria)
 
 #Gráfica
-ggplot(todo_CO2, aes(x=nom_categoria, y=Valor_CO2)) +
+ggplot(todo_CO2, aes(x=id_categoria, y=Valor_CO2)) +
   ggtitle('Emisión de CO2 generado en el 2016 (ZMVM)', paste("Media=",m_todo_co2, "   " , " Máximo  ~  ", nom_maximo[1] ,"=", maximo)) +
   xlab("Categoría") +
   ylab("Toneladas al año")+
@@ -253,21 +253,14 @@ ggplot(zmvm_co2, aes(x=nom_categoria, y=Valor_CO2)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
   
 
-# ----- INTENTO PIE CHART -----------------
+# ----- PORCENTAJES Y SUMA  DE CO2 (VEHICULOS) -----------------
 
-# Pie Chart with Percentages #Intento
+#porcentajes
 slices <- select(zmvm_co2,Valor_CO2)
-lbls <- select(zmvm_co2,nom_categoria)
 pct <- round((slices/sum(slices)*100), digits = 3)
-lbls <- paste(lbls, pct) # add percents to labels
-lbls <- paste(lbls,"%",sep="") # ad % to labels
-pie(slices,labels = lbls, col=rainbow(11),
-    main="Pie Chart of Countries")
-
-
 porcentajes <- cbind(zmvm_co2,Porcentaje=pct) #DATA FRAME DE PORCENTAJES
 
-
+suma_co2 <- sum(zmvm_co2[,2]) #SUMA D CO2 POR VEHÍCULOS 
 
 
 
