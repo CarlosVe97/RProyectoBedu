@@ -4,7 +4,7 @@ Dado que el proyecto va enfocado en la relación que tienen las emisiones de CO<
 
 ## Resumen del análisis
 
-- Las emisiones más importantes producidas por los vehículos son las de CO<sub>2</sub>. A pesar que sí se generan otro tipo de emisiones no resaltan tanto en los gráficos por la diferencia que existe entre esos valores y los de CO<sub>2</sub>
+- Las emisiones más importantes producidas por los vehículos son las de CO<sub>2</sub>. A pesar de que sí se generan otro tipo de emisiones, estos no resaltan tanto en los gráficos por la diferencia que existe entre esos valores y los de CO<sub>2</sub>
 - Las emisiones que aporta la zona de Tizayuca son mínimas, por lo tanto, la mayor concentración de información se desglosa de la zona de la CDMX y el EDOMEX
 - El rubro de la ZMVM es la suma de las zonas CDMX, EDOMEX y TIZA
 - Al comparar la emisión de CO<sub>2</sub> de todas las categorías, las más altas resultan ser de vehículos
