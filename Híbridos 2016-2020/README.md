@@ -11,7 +11,7 @@ a la concentración de población y de riqueza además de la disponibilidad de l
 sus elevados costos. Además de que el top 3 de ventas se mantiene en los estados de CDMX,EdoMex y Jalisco, las ventas estacionales reflejan un mayor número de ventas en los meses 
 de noviembre y diciembre. 
 ## Algunos inconvenientes a los que nos enfrentamos fueron:
-
-## Análisis de la información.
+El número de datos no fue el suficiente para realizar un análisis de predicción a futuro mediante el modelo ARIMA, se propone encontrar bases de datos con una mayor cantidad de datos, tomando en cuenta que proceden de otras fuentes o bien mejorar el modelo de predicción.
 
 ## Conclusiones y proyecciones a futuro
+Si bien la venta de vehículos eléctricos, híbridos e híbridos plug-in va a la alza (con énfasis en los plug-in al ser los más accesibles), esta solamente se ve reflejada en algunos estados con mayores ingresos como la Ciudad de México, lo que nos dice que aún falta camino que recorrer.
