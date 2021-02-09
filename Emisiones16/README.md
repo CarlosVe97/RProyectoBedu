@@ -10,3 +10,7 @@ Dado que el proyecto va enfocado en la relación que tienen las emisiones de CO<
 - Al comparar la emisión de CO<sub>2</sub> de todas las categorías, las más altas resultan ser de vehículos
 - Los vehículos que producen mayor emisión de CO<sub>2</sub> son los autos particulares en la CDMX y en el EDOMEX, mientras que los de carga mayores a 3.8t son los de mayor emisión de CO2 en Tizayuca
 
+## Complicaciones
+
+Los datos recopilados sólo corresponden al año 2016, lo que dificulta el análisis de las variables a través del tiempo 
+
